@@ -275,15 +275,6 @@ def delete_session(session_id):
     return jsonify({"message": "Session deleted"})
 
 
-@app.route("/api/sessions", methods=["GET"])
-def list_sessions():
-    """List all attendance sessions."""
-    conn = get_db()
-    sessions = conn.execute("SELECT * FROM attendance_sessions ORDER BY started_at DESC").fetchall()
-    conn.close()
-    return jsonify([dict(s) for s in sessions])
-
-
 # ── QR token rotation ────────────────────────────────────────────────────
 
 @app.route("/api/sessions/<session_id>/current-token", methods=["GET"])
