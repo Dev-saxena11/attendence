@@ -138,11 +138,18 @@ def create_qr_token(conn, session_id):
     }
 
 
+import qrcode.image.pure
+
 def make_qr_data_uri(data_string):
     """Generate a QR code image and return it as a base64 data-URI."""
-    img = qrcode.make(data_string, box_size=8, border=2)
+    img = qrcode.make(
+        data_string, 
+        box_size=8, 
+        border=2, 
+        image_factory=qrcode.image.pure.PyPNGImage
+    )
     buf = io.BytesIO()
-    img.save(buf, format="PNG")
+    img.save(buf)
     buf.seek(0)
     b64 = base64.b64encode(buf.read()).decode("ascii")
     return f"data:image/png;base64,{b64}"

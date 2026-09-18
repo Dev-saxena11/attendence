@@ -1,4 +1,4 @@
 Flask==3.0.3
-qrcode[pil]==7.4.2
-Pillow==10.4.0
+qrcode==7.4.2
+pypng==0.20220715.0
 gunicorn==22.0.0
