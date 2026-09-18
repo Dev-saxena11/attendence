@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard — QR Attendance Tracker</title>
+    <meta name="description" content="Dynamic QR Attendance Tracker — Teacher Dashboard for creating and managing attendance sessions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="admin-body">
+
+    <!-- ─── CREATE SESSION PANEL ─── -->
+    <div id="create-panel" class="container">
+        <header class="header">
+            <div class="logo-mark">◈</div>
+            <h1>QR Attendance Tracker</h1>
+            <p class="subtitle">Create an attendance session for your class</p>
+        </header>
+
+        <form id="create-form" class="card form-card" autocomplete="off">
+            <div class="form-group">
+                <label for="class_section">Class / Section</label>
+                <input type="text" id="class_section" placeholder="e.g. CSE 3A" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" placeholder="e.g. Data Analytics" required>
+            </div>
+            <div class="form-group">
+                <label for="topic">Lecture / Topic <span class="optional">(optional)</span></label>
+                <input type="text" id="topic" placeholder="e.g. Regression Analysis">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" id="start-btn">
+                <span class="btn-icon">▶</span> Start Attendance
+            </button>
+        </form>
+
+        <!-- Past Sessions -->
+        <div id="past-sessions" class="card" style="margin-top:1.5rem;">
+            <h3 style="margin-bottom:.75rem;">Past Sessions</h3>
+            <div id="past-sessions-list" class="past-list">
+                <p class="muted">Loading…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── ACTIVE SESSION DASHBOARD ─── -->
+    <div id="session-panel" class="container" style="display:none;">
+        <header class="header">
+            <div class="badge badge-active">● LIVE</div>
+            <h1 id="dash-subject" class="dash-title"></h1>
+            <p id="dash-class" class="dash-class"></p>
+            <p id="dash-topic" class="dash-topic"></p>
+        </header>
+
+        <!-- QR Card -->
+        <div class="card qr-card">
+            <img id="qr-image" class="qr-img" src="" alt="QR Code">
+            <div class="timer-ring">
+                <svg viewBox="0 0 120 120" class="timer-svg">
+                    <circle cx="60" cy="60" r="54" class="timer-track"/>
+                    <circle cx="60" cy="60" r="54" class="timer-progress" id="timer-circle"/>
+                </svg>
+                <span id="countdown" class="timer-text">10</span>
+            </div>
+            <p class="timer-label">QR refreshes in</p>
+        </div>
+
+        <!-- Attendance Count -->
+        <div class="card stat-card">
+            <div class="stat-number" id="attendance-count">0</div>
+            <div class="stat-label">Students Present</div>
+        </div>
+
+        <!-- Recent Attendance -->
+        <div class="card">
+            <div class="section-header">
+                <h3>Recent Attendance</h3>
+                <span id="refresh-indicator" class="refresh-dot" title="Auto-refreshing"></span>
+            </div>
+            <div class="table-wrap">
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Roll No.</th>
+                            <th>Name</th>
+                            <th>Student ID</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attendance-body">
+                        <tr><td colspan="4" class="muted">No attendance yet</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-row">
+            <button class="btn btn-danger" id="stop-btn">■ Stop Attendance</button>
+            <button class="btn btn-secondary" id="export-btn">↓ Export CSV</button>
+        </div>
+
+        <p class="session-id-label">Session: <code id="dash-session-id"></code></p>
+    </div>
+
+    <script src="/static/js/admin.js"></script>
+</body>
+</html>

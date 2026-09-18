@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance — QR Attendance Tracker</title>
+    <meta name="description" content="Mark your attendance for the current class session.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="student-body">
+
+    <div class="container container-sm">
+        <header class="header">
+            <div class="logo-mark">◈</div>
+            <h1>Mark Attendance</h1>
+            <p class="subtitle">
+                <strong>{{ subject }}</strong> — {{ class_section }}
+            </p>
+        </header>
+
+        <form id="attendance-form" class="card form-card" autocomplete="off">
+            <input type="hidden" id="session_id" value="{{ session_id }}">
+            <input type="hidden" id="token" value="{{ token }}">
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" placeholder="e.g. Rahul Sharma" required>
+            </div>
+            <div class="form-group">
+                <label for="roll_number">Roll Number</label>
+                <input type="text" id="roll_number" placeholder="e.g. 42" required>
+            </div>
+            <div class="form-group">
+                <label for="class_section_input">Class / Section</label>
+                <input type="text" id="class_section_input" value="{{ class_section }}" required>
+            </div>
+            <div class="form-group">
+                <label for="student_id">Student ID / Enrollment No.</label>
+                <input type="text" id="student_id" placeholder="e.g. EN2024042" required>
+            </div>
+            <div class="form-group">
+                <label for="email">College Email <span class="optional">(optional)</span></label>
+                <input type="email" id="email" placeholder="e.g. rahul@college.edu">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" id="mark-btn">
+                ✓ Mark Attendance
+            </button>
+
+            <div id="form-message" class="form-message" style="display:none;"></div>
+        </form>
+    </div>
+
+    <script src="/static/js/student.js"></script>
+</body>
+</html>
