@@ -214,9 +214,33 @@
                         <strong>${esc(s.subject)} — ${esc(s.class_section)}</strong>
                         <span>${esc(s.id)} · ${dateStr}</span>
                     </div>
-                    ${badge}
+                    <div class="past-actions" style="display: flex; gap: 10px; align-items: center;">
+                        ${badge}
+                        <button class="delete-btn" data-id="${esc(s.id)}" style="background:none; border:none; color:#f43f5e; cursor:pointer; padding:4px;" title="Delete Session">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>`;
             }).join("");
+
+            // Attach delete handlers
+            el.querySelectorAll(".delete-btn").forEach(btn => {
+                btn.addEventListener("click", async (e) => {
+                    const id = e.currentTarget.getAttribute("data-id");
+                    if (confirm(`Are you sure you want to permanently delete session ${id}? This will remove all associated attendance data.`)) {
+                        try {
+                            await fetch(`/api/sessions/${id}`, { method: 'DELETE' });
+                            loadPastSessions();
+                        } catch(err) {
+                            alert("Failed to delete session.");
+                            console.error(err);
+                        }
+                    }
+                });
+            });
+
         } catch (err) {
             console.error(err);
         }

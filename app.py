@@ -251,23 +251,37 @@ def start_session():
 
 @app.route("/api/sessions/<session_id>/stop", methods=["POST"])
 def stop_session(session_id):
-    """Stop an active attendance session."""
+    """Mark a session as CLOSED so no new tokens can be generated or used."""
     conn = get_db()
-    session = conn.execute("SELECT * FROM attendance_sessions WHERE id = ?", (session_id,)).fetchone()
-    if session is None:
-        conn.close()
-        return jsonify({"error": "Session not found"}), 404
-    if session["status"] != "ACTIVE":
-        conn.close()
-        return jsonify({"error": "Session is not active"}), 400
-
     conn.execute(
-        "UPDATE attendance_sessions SET status = 'CLOSED', ended_at = ? WHERE id = ?",
-        (utcnow(), session_id),
+        "UPDATE attendance_sessions SET status = 'CLOSED', ended_at = ? WHERE id = ? AND status = 'ACTIVE'",
+        (utcnow(), session_id)
     )
     conn.commit()
     conn.close()
-    return jsonify({"message": "Session stopped", "session_id": session_id})
+    return jsonify({"message": "Session stopped"})
+
+
+@app.route("/api/sessions/<session_id>", methods=["DELETE"])
+def delete_session(session_id):
+    """Delete a session and all its associated data permanently."""
+    conn = get_db()
+    # Delete from all related tables
+    conn.execute("DELETE FROM attendance WHERE session_id = ?", (session_id,))
+    conn.execute("DELETE FROM qr_tokens WHERE session_id = ?", (session_id,))
+    conn.execute("DELETE FROM attendance_sessions WHERE id = ?", (session_id,))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Session deleted"})
+
+
+@app.route("/api/sessions", methods=["GET"])
+def list_sessions():
+    """List all attendance sessions."""
+    conn = get_db()
+    sessions = conn.execute("SELECT * FROM attendance_sessions ORDER BY started_at DESC").fetchall()
+    conn.close()
+    return jsonify([dict(s) for s in sessions])
 
 
 # ── QR token rotation ────────────────────────────────────────────────────
