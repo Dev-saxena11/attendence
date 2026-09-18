@@ -468,8 +468,12 @@ def list_sessions():
 # Main
 # ---------------------------------------------------------------------------
 
+# Initialize the database on startup (works for both local and Gunicorn)
+init_db()
+
 if __name__ == "__main__":
-    init_db()
+    debug_mode = os.environ.get("FLASK_DEBUG", "1").lower() in ("1", "true", "yes")
+    port = int(os.environ.get("PORT", "5000"))
     print("\n  ✦  Dynamic QR Attendance Tracker")
-    print("  ✦  Running at http://127.0.0.1:5000\n")
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    print(f"  ✦  Running at http://127.0.0.1:{port}\n")
+    app.run(debug=debug_mode, host="0.0.0.0", port=port)
